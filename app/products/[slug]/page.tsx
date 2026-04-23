@@ -1,9 +1,43 @@
 import { getProduct, getAllProducts } from "@/lib/api";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+const BASE_URL = "http://localhost:3000";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProduct(slug, { next: { revalidate: 3600 } });
+
+  if (!product) return {};
+
+  const url = `${BASE_URL}/products/${slug}`;
+  const imageUrl = `${BASE_URL}${product.images[0].url}`;
+
+  return {
+    title: product.name,
+    description: product.description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: "website",
+      url,
+      title: product.name,
+      description: product.description,
+      images: [{ url: imageUrl, alt: product.images[0].alt }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description: product.description,
+      images: [imageUrl],
+    },
+  };
+}
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
