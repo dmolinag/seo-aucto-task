@@ -1,6 +1,7 @@
 import { getProduct, getAllProducts } from "@/lib/api";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -134,9 +135,15 @@ export default async function ProductPage({ params }: Props) {
     <div className="max-w-5xl mx-auto px-6 py-10">
       <div className="grid md:grid-cols-2 gap-8">
         {/* Image */}
-        <div className="bg-white rounded-xl overflow-hidden">
-          {/* TODO: Replace with next/image */}
-          <img src={product.images[0].url} />
+        <div className="bg-white rounded-xl overflow-hidden relative aspect-square">
+          <Image
+            src={product.images[0].url}
+            alt={product.images[0].alt}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-contain"
+          />
         </div>
 
         {/* Meta */}
