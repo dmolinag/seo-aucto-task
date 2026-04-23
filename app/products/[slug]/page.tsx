@@ -50,7 +50,87 @@ export default async function ProductPage({ params }: Props) {
 
   if (!product) return notFound();
 
+  const url = `${BASE_URL}/products/${slug}`;
+  const imageUrl = `${BASE_URL}${product.images[0].url}`;
+
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: [imageUrl],
+    description: product.description,
+    sku: product.sku,
+    brand: { "@type": "Brand", name: product.brand },
+    offers: {
+      "@type": "Offer",
+      price: String(product.price),
+      priceCurrency: product.currency,
+      availability:
+        product.availability === "in_stock"
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      url,
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: String(product.rating),
+      reviewCount: String(product.reviewCount),
+    },
+    review: product.reviews.map((r) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.author },
+      reviewRating: { "@type": "Rating", ratingValue: String(r.rating) },
+      reviewBody: r.comment,
+      datePublished: r.date,
+    })),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Kitchen Gadgets",
+        item: BASE_URL,
+      },
+      { "@type": "ListItem", position: 3, name: product.name, item: url },
+    ],
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      ...product.features.map((f) => ({
+        "@type": "Question",
+        name: `What is the ${f.title.toLowerCase()} of the ${product.name}?`,
+        acceptedAnswer: { "@type": "Answer", text: f.description },
+      })),
+      ...product.specs.map((s) => ({
+        "@type": "Question",
+        name: `What is the ${s.label.toLowerCase()} of the ${product.name}?`,
+        acceptedAnswer: { "@type": "Answer", text: s.value },
+      })),
+    ],
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
     <div className="max-w-5xl mx-auto px-6 py-10">
       <div className="grid md:grid-cols-2 gap-8">
         {/* Image */}
@@ -120,5 +200,6 @@ export default async function ProductPage({ params }: Props) {
         </div>
       </div>
     </div>
+    </>
   );
 }
