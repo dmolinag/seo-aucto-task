@@ -132,7 +132,7 @@ export default async function ProductPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-    <div className="max-w-5xl mx-auto px-6 py-10">
+    <article className="max-w-5xl mx-auto px-6 py-10">
       <div className="grid md:grid-cols-2 gap-8">
         {/* Image */}
         <div className="bg-white rounded-xl overflow-hidden relative aspect-square">
@@ -152,9 +152,9 @@ export default async function ProductPage({ params }: Props) {
 
           <p className="text-gray-600">{product.description}</p>
 
-          <div className="text-2xl font-semibold">
+          <p className="text-2xl font-semibold">
             {product.currency} {product.price}
-          </div>
+          </p>
 
           <span className="inline-block w-fit px-3 py-1 text-sm rounded-md bg-green-100 text-green-700">
             {product.availability === "in_stock" ? "In Stock" : "Out of Stock"}
@@ -163,14 +163,14 @@ export default async function ProductPage({ params }: Props) {
       </div>
 
       {/* Overview */}
-      <div className="mt-10">
-        <div className="text-xl font-semibold mb-2">Overview</div>
+      <section className="mt-10" aria-labelledby="overview-heading">
+        <h2 id="overview-heading" className="text-xl font-semibold mb-2">Overview</h2>
         <p className="text-gray-700">{product.longDescription}</p>
-      </div>
+      </section>
 
       {/* Features */}
-      <div className="mt-10">
-        <div className="text-xl font-semibold mb-2">Features</div>
+      <section className="mt-10" aria-labelledby="features-heading">
+        <h2 id="features-heading" className="text-xl font-semibold mb-2">Features</h2>
         <ul className="space-y-2 list-disc pl-5">
           {product.features.map((f, i) => (
             <li key={i}>
@@ -178,35 +178,35 @@ export default async function ProductPage({ params }: Props) {
             </li>
           ))}
         </ul>
-      </div>
+      </section>
 
       {/* Specs */}
-      <div className="mt-10">
-        <div className="text-xl font-semibold mb-2">Specifications</div>
-        <ul className="space-y-2">
+      <section className="mt-10" aria-labelledby="specs-heading">
+        <h2 id="specs-heading" className="text-xl font-semibold mb-2">Specifications</h2>
+        <dl className="space-y-2">
           {product.specs.map((s, i) => (
-            <li key={i}>
-              <span className="font-medium">{s.label}:</span> {s.value}
+            <div key={i} className="flex gap-2">
+              <dt className="font-medium">{s.label}:</dt>
+              <dd className="text-gray-700">{s.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* Reviews */}
+      <section className="mt-10" aria-labelledby="reviews-heading">
+        <h2 id="reviews-heading" className="text-xl font-semibold mb-2">Customer Reviews</h2>
+        <ul className="space-y-4">
+          {product.reviews.map((r, i) => (
+            <li key={i} className="border-t pt-4">
+              <p className="font-semibold">{r.author}</p>
+              <p className="text-sm text-gray-500">Rating: {r.rating}/5</p>
+              <p className="text-gray-700">{r.comment}</p>
             </li>
           ))}
         </ul>
-      </div>
-
-      {/* Reviews */}
-      <div className="mt-10">
-        <div className="text-xl font-semibold mb-2">Customer Reviews</div>
-
-        <div className="space-y-4">
-          {product.reviews.map((r, i) => (
-            <div key={i} className="border-t pt-4">
-              <div className="font-semibold">{r.author}</div>
-              <div className="text-sm text-gray-500">Rating: {r.rating}/5</div>
-              <p className="text-gray-700">{r.comment}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+      </section>
+    </article>
     </>
   );
 }
