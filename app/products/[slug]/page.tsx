@@ -140,6 +140,15 @@ export default async function ProductPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
     <article className="max-w-5xl mx-auto px-6 py-10">
+      {/* Breadcrumb */}
+      <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-sm text-stone-400">
+        <Link href="/" className="hover:text-stone-700 transition-colors">Home</Link>
+        <span aria-hidden="true">›</span>
+        <Link href="/" className="hover:text-stone-700 transition-colors">Kitchen Gadgets</Link>
+        <span aria-hidden="true">›</span>
+        <span className="text-stone-600">{product.name}</span>
+      </nav>
+
       <div className="grid md:grid-cols-2 gap-8 items-center">
         {/* Image */}
         <div className="bg-stone-50 rounded-3xl overflow-hidden relative aspect-square p-8">
@@ -155,13 +164,13 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Meta */}
         <div className="flex flex-col gap-5">
-          <h1 className="text-4xl font-bold tracking-tight leading-tight">{product.name}</h1>
+          <h1 className="text-[2.6rem] font-bold tracking-tight leading-[1.1]">{product.name}</h1>
 
           <p className="text-stone-500 text-base leading-relaxed">{product.description}</p>
 
-          <p className="text-4xl font-bold tracking-tight">
+          <p className="text-[2.75rem] font-bold tracking-tight">
             ${product.price.toFixed(2)}
-            <span className="ml-2 text-xs font-semibold uppercase tracking-widest text-stone-400">{product.currency}</span>
+            <span className="ml-2 text-xs font-semibold uppercase tracking-[0.12em] text-stone-400">{product.currency}</span>
           </p>
 
           <span className={`inline-flex items-center gap-1.5 w-fit px-3 py-1 text-sm font-medium rounded-full ring-1 ${
@@ -177,13 +186,13 @@ export default async function ProductPage({ params }: Props) {
 
       {/* Overview */}
       <section className="mt-12" aria-labelledby="overview-heading">
-        <h2 id="overview-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-3 border-t border-stone-200 pt-6">Overview</h2>
+        <h2 id="overview-heading" className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-400 mb-3 border-t border-stone-200 pt-6">Overview</h2>
         <p className="text-stone-700 leading-relaxed">{product.longDescription}</p>
       </section>
 
       {/* Features */}
       <section className="mt-10" aria-labelledby="features-heading">
-        <h2 id="features-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-4 border-t border-stone-200 pt-6">Features</h2>
+        <h2 id="features-heading" className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-400 mb-4 border-t border-stone-200 pt-6">Features</h2>
         <ul className="grid sm:grid-cols-2 gap-4">
           {product.features.map((f, i) => (
             <li key={i} className="rounded-2xl border border-stone-100 bg-stone-50 p-4 hover:border-stone-200 transition-colors">
@@ -196,7 +205,7 @@ export default async function ProductPage({ params }: Props) {
 
       {/* Specs */}
       <section className="mt-10" aria-labelledby="specs-heading">
-        <h2 id="specs-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-4 border-t border-stone-200 pt-6">Specifications</h2>
+        <h2 id="specs-heading" className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-400 mb-4 border-t border-stone-200 pt-6">Specifications</h2>
         <dl className="rounded-2xl border border-stone-100 overflow-hidden divide-y divide-stone-100">
           {product.specs.map((s, i) => (
             <div key={i} className={`flex gap-4 px-4 py-3 ${i % 2 === 1 ? "bg-stone-50/70" : "bg-white"}`}>
@@ -209,7 +218,7 @@ export default async function ProductPage({ params }: Props) {
 
       {/* Reviews */}
       <section className="mt-10" aria-labelledby="reviews-heading">
-        <h2 id="reviews-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-4 border-t border-stone-200 pt-6">Customer Reviews</h2>
+        <h2 id="reviews-heading" className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-400 mb-4 border-t border-stone-200 pt-6">Customer Reviews</h2>
         <ul className="space-y-3">
           {product.reviews.map((r, i) => (
             <li key={i} className="rounded-2xl border border-stone-100 bg-white p-5 hover:border-stone-200 transition-colors">
@@ -232,7 +241,7 @@ export default async function ProductPage({ params }: Props) {
       {/* Related products */}
       {relatedProducts.length > 0 && (
         <section className="mt-10" aria-labelledby="related-heading">
-          <h2 id="related-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-4 border-t border-stone-200 pt-6">You May Also Like</h2>
+          <h2 id="related-heading" className="text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-400 mb-4 border-t border-stone-200 pt-6">You May Also Like</h2>
           <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
             {relatedProducts.map((r) => (
               <li key={r.slug}>
