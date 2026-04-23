@@ -1,13 +1,18 @@
-import { getProduct } from "@/lib/api";
+import { getProduct, getAllProducts } from "@/lib/api";
 import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.map((p) => ({ slug: p.slug }));
+}
+
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const product = await getProduct(slug);
+  const product = await getProduct(slug, { next: { revalidate: 3600 } });
 
   if (!product) return notFound();
 

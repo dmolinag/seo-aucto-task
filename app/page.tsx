@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getAllProducts } from "@/lib/api";
 
 export default async function Home() {
-  const products = await getAllProducts();
+  const products = await getAllProducts({ next: { revalidate: 3600 } });
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-10">
