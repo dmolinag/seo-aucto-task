@@ -2,6 +2,7 @@ import { getProduct, getAllProducts } from "@/lib/api";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -50,6 +51,12 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProduct(slug, { next: { revalidate: 3600 } });
 
   if (!product) return notFound();
+
+  const relatedProducts = (
+    await Promise.all(
+      product.relatedSlugs.map((s) => getProduct(s, { next: { revalidate: 3600 } }))
+    )
+  ).filter((p) => p !== null);
 
   const url = `${BASE_URL}/products/${slug}`;
   const imageUrl = `${BASE_URL}${product.images[0].url}`;
@@ -221,6 +228,37 @@ export default async function ProductPage({ params }: Props) {
           ))}
         </ul>
       </section>
+
+      {/* Related products */}
+      {relatedProducts.length > 0 && (
+        <section className="mt-10" aria-labelledby="related-heading">
+          <h2 id="related-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-4 border-t border-stone-200 pt-6">You May Also Like</h2>
+          <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {relatedProducts.map((r) => (
+              <li key={r.slug}>
+                <Link
+                  href={`/products/${r.slug}`}
+                  className="flex flex-col rounded-2xl border border-stone-100 bg-white hover:border-stone-300 hover:shadow-sm transition-all duration-200 overflow-hidden"
+                >
+                  <div className="relative aspect-square bg-stone-50">
+                    <Image
+                      src={r.images[0].url}
+                      alt={r.images[0].alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-contain p-6"
+                    />
+                  </div>
+                  <div className="p-4 border-t border-stone-100">
+                    <p className="font-semibold text-stone-800 text-sm">{r.name}</p>
+                    <p className="text-stone-500 text-sm mt-0.5">${r.price.toFixed(2)}</p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </article>
     </>
   );
